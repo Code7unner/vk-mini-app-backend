@@ -8,44 +8,44 @@ import (
 	"strconv"
 )
 
-type UserHandler struct {
+type TeamHandler struct {
 	app app.Application
 }
 
-func NewUserHandler(a app.Application) *UserHandler {
-	return &UserHandler{app: a}
+func NewTeamHandler(a app.Application) *TeamHandler {
+	return &TeamHandler{app: a}
 }
 
-func (h *UserHandler) RegisterUser(c echo.Context) error {
-	user := new(models.User)
-	if err := c.Bind(user); err != nil {
+func (h *TeamHandler) CreateTeam(c echo.Context) error {
+	team := new(models.Team)
+	if err := c.Bind(team); err != nil {
 		return c.JSON(http.StatusBadRequest, errorResponse(err.Error()))
 	}
 
-	u, err := h.app.GetUser(user.ID)
+	t, err := h.app.GetTeam(team.ID)
 	switch err {
-	case app.ErrUserNotFound:
-		u, err = h.app.CreateUser(user)
+	case app.ErrTeamNotFound:
+		t, err = h.app.CreateTeam(team)
 		if err != nil {
-			return c.JSON(http.StatusInternalServerError, errorResponse("could not register user"))
+			return c.JSON(http.StatusInternalServerError, errorResponse(err.Error()))
 		}
-		return c.JSON(http.StatusOK, u)
+		return c.JSON(http.StatusOK, t)
 	case nil:
-		return c.JSON(http.StatusOK, u)
+		return c.JSON(http.StatusOK, t)
 	default:
 		return c.JSON(http.StatusInternalServerError, errorResponse("unexpected error"))
 	}
 }
 
-func (h *UserHandler) Login(c echo.Context) error {
+func (h *TeamHandler) GetTeam(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, errorResponse(err.Error()))
 	}
-	u, err := h.app.GetUser(id)
+	t, err := h.app.GetTeam(id)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, errorResponse(err.Error()))
 	}
 
-	return c.JSON(http.StatusOK, u)
+	return c.JSON(http.StatusOK, t)
 }

@@ -16,9 +16,13 @@ func New(a app.Application) *echo.Echo {
 
 	userHandler := handlers.NewUserHandler(a)
 	u := e.Group("/user")
-
 	u.GET("/login/:id", userHandler.Login)
 	u.POST("/register", userHandler.RegisterUser)
+
+	teamHandler := handlers.NewTeamHandler(a)
+	t := e.Group("/team")
+	t.GET("/:id", teamHandler.GetTeam)
+	t.POST("/create", teamHandler.CreateTeam)
 
 	return e
 }
