@@ -4,11 +4,13 @@ import (
 	"context"
 	"github.com/code7unner/vk-mini-app-backend/config"
 	"github.com/code7unner/vk-mini-app-backend/internal/server"
+	"github.com/code7unner/vk-mini-app-backend/scrapper"
 	"github.com/joho/godotenv"
 	"github.com/labstack/gommon/log"
 	"github.com/sirupsen/logrus"
 	"os"
 	"os/signal"
+	"time"
 )
 
 func init() {
@@ -26,8 +28,12 @@ func main() {
 		logrus.Fatal(err)
 		return
 	}
-	config.InitYAMLConfig(cfg.ConfigFile)
 
+	// Starting scrapper
+	scrap := scrapper.New(time.Duration(cfg.MinutesToScrap))
+	scrap.Start(ctx)
+
+	// Starting server
 	srv := server.New()
 	go func() {
 		if err := srv.Start(":8081"); err != nil {

@@ -1,6 +1,8 @@
 package config
 
-import "github.com/caarlos0/env"
+import (
+	"github.com/caarlos0/env"
+)
 
 // Config all app variables are stored here
 type Config struct {
@@ -15,8 +17,8 @@ type Config struct {
 	// App config
 	LogLevel string `env:"LOG_LEVEL" envDefault:"debug"`
 
-	// Config File for sites
-	ConfigFile string `env:"CONFIG_FILE" envDefault:"sites.yaml"`
+	// Seconds to Scrap
+	MinutesToScrap int `env:"MINUTES_TO_SCRAP" envDefault:"1800"`
 }
 
 // New returns a new Config struct
