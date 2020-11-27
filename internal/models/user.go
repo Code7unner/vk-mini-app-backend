@@ -12,19 +12,18 @@ type UserImpl interface {
 }
 
 type User struct {
-	tableName    struct{} `pg:"users,alias:c"` //nolint
-	ID           int      `json:"id"`
-	Name         string   `json:"name"`
-	Lastname     string   `json:"lastname"`
-	City         string   `json:"city"`
-	Country      string   `json:"country"`
-	Sex          int      `json:"sex"`
-	Timezone     int      `json:"timezone"`
-	Photo100     string   `json:"photo_100"`
-	Photo200     string   `json:"photo_200"`
-	PhotoMaxOrig string   `json:"photo_max_orig"`
-	TeamID       int      `json:"team_id"`
-	InTeam       bool     `json:"in_team"`
+	tableName   struct{} `pg:"users,alias:c"` //nolint
+	ID          int      `json:"id"`
+	Name        string   `json:"name"`
+	Lastname    string   `json:"lastname"`
+	City        string   `json:"city"`
+	Country     string   `json:"country"`
+	Sex         int      `json:"sex"`
+	Timezone    int      `json:"timezone"`
+	PhotoSmall  string   `json:"photo_100"`
+	PhotoMedium string   `json:"photo_200"`
+	PhotoBig    string   `json:"photo_max_orig"`
+	TeamID      int      `json:"team_id"`
 }
 
 type UserRepo struct {
