@@ -15,10 +15,8 @@ type Config struct {
 	SslEnable bool   `env:"DB_SSL_ENABLE" envDefault:"false"`
 
 	// App config
-	LogLevel string `env:"LOG_LEVEL" envDefault:"debug"`
-
-	// Seconds to Scrap
-	MinutesToScrap int `env:"MINUTES_TO_SCRAP" envDefault:"1800"`
+	LogLevel   string `env:"LOG_LEVEL" envDefault:"debug"`
+	ServerPort string `env:"SERVER_PORT" envDefault:"8081"`
 }
 
 // New returns a new Config struct
