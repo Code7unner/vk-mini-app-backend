@@ -11,7 +11,7 @@ create table if not exists public.users
     photo_medium varchar not null,
     photo_big    varchar not null,
     team_id      bigserial,
-    steam_id     bigserial
+    steam_id     bigint
 );
 
 create table if not exists public.teams
