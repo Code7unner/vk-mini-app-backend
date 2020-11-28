@@ -1,6 +1,10 @@
-.PHONY: migrate_localhost
-migrate_localhost:
+.PHONY: migrate_localhost_up
+migrate_localhost_up:
 	migrate -database postgres://postgres:postgres@localhost:5432/vk_mini_app?sslmode=disable -path ./internal/db/migrations up
+
+.PHONY: migrate_localhost_down
+migrate_localhost_down:
+	migrate -database postgres://postgres:postgres@localhost:5432/vk_mini_app?sslmode=disable -path ./internal/db/migrations down
 
 .PHONY: build_localhost
 build_localhost:
