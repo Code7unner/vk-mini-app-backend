@@ -15,6 +15,7 @@ type Auth interface {
 
 type auth struct {
 	SecretKey string
+	expTime   time.Time
 }
 
 type UserClaims struct {
@@ -23,7 +24,7 @@ type UserClaims struct {
 }
 
 func New(secret string) Auth {
-	return &auth{SecretKey: secret}
+	return &auth{SecretKey: secret, expTime: time.Now().Add(200 * time.Hour)}
 }
 
 func (a auth) GetUserID(c *http.Cookie) (int, error) {
@@ -41,15 +42,12 @@ func (a auth) GetUserID(c *http.Cookie) (int, error) {
 }
 
 func (a auth) SetUserToken(id int) (string, error) {
-	// Declare the expiration time of the token
-	// here, we have kept it as 5 minutes
-	expirationTime := time.Now().Add(200 * time.Hour)
 	// Create the JWT claims, which includes the username and expiry time
 	claims := &UserClaims{
 		UserID: strconv.Itoa(id),
 		StandardClaims: jwt.StandardClaims{
 			// In JWT, the expiry time is expressed as unix milliseconds
-			ExpiresAt: expirationTime.Unix(),
+			ExpiresAt: a.expTime.Unix(),
 		},
 	}
 
@@ -68,6 +66,6 @@ func (a auth) NewCookie(name, value string) *http.Cookie {
 	return &http.Cookie{
 		Name:    name,
 		Value:   value,
-		Expires: <-time.After(200 * time.Hour),
+		Expires: a.expTime,
 	}
 }
