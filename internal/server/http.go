@@ -26,7 +26,7 @@ func New(a app.Application, cfg *config.Config) *echo.Echo {
 	u.POST("/register", userHandler.RegisterUser)
 	u.GET("/login", userHandler.Login)
 
-	teamHandler := handlers.NewTeamHandler(a)
+	teamHandler := handlers.NewTeamHandler(a, authorize)
 	t := e.Group("/team")
 	t.GET("/", teamHandler.GetTeam)
 	t.POST("/create", teamHandler.CreateTeam)

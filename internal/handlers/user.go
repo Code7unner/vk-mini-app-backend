@@ -50,11 +50,11 @@ func (h *UserHandler) Login(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, errorResponse(err.Error()))
 	}
-	userID, err := h.authorize.GetUserID(cookie)
+	id, err := h.authorize.GetUserID(cookie)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, errorResponse(err.Error()))
 	}
-	u, err := h.app.GetUser(userID)
+	u, err := h.app.GetUser(id)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, errorResponse(err.Error()))
 	}
