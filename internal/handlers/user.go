@@ -27,7 +27,7 @@ func (h *UserHandler) RegisterUser(c echo.Context) error {
 	case app.ErrUserNotFound:
 		u, err = h.app.CreateUser(user)
 		if err != nil {
-			return c.JSON(http.StatusInternalServerError, errorResponse("could not register user"))
+			return c.JSON(http.StatusInternalServerError, errorResponse(err.Error()))
 		}
 		return c.JSON(http.StatusOK, u)
 	case nil:
