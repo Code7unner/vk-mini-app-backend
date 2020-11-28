@@ -30,5 +30,10 @@ func New(a app.Application, host string, token string) *echo.Echo {
 	s.GET("/callback", steamHandler.Callback)
 	s.GET("/user", steamHandler.GetSteamUser)
 
+	matchHandler := handlers.NewMatchHandler(a)
+	m := e.Group("/match")
+	m.GET("/", matchHandler.GetMatch)
+	m.POST("/create", matchHandler.CreateMatch)
+
 	return e
 }

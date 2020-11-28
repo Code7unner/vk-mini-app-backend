@@ -11,7 +11,6 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
-	"time"
 )
 
 type SteamHandler struct {
@@ -38,15 +37,6 @@ func (h *SteamHandler) Login(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, errorResponse(err.Error()))
 	}
-
-	userID := c.Param("user_id")
-
-	cookie := &http.Cookie{
-		Name:    "user_id",
-		Value:   userID,
-		Expires: <-time.After(time.Hour * 48),
-	}
-	c.SetCookie(cookie)
 
 	return c.Redirect(http.StatusSeeOther, url)
 }

@@ -16,6 +16,10 @@ type Application interface {
 	// Steams
 	GetSteamUser(id int) (*models.Steam, error)
 	CreateSteamUser(steam *models.Steam, userID int) (*models.Steam, error)
+	
+	// Matches
+	GetMatch(id int) (*models.Match, error)
+	CreateMatch(match *models.Match) (*models.Match, error)
 }
 
 type App struct {
@@ -94,4 +98,22 @@ func (a App) CreateSteamUser(steam *models.Steam, userID int) (*models.Steam, er
 	}
 
 	return s, nil
+}
+
+func (a App) GetMatch(id int) (*models.Match, error) {
+	m, ok := a.matchModel.Get(id)
+	if !ok {
+		return nil, ErrMatchNotFound
+	}
+
+	return m, nil
+}
+
+func (a App) CreateMatch(match *models.Match) (*models.Match, error) {
+	m, err := a.matchModel.Create(match)
+	if err != nil {
+		return nil, err
+	}
+
+	return m, nil
 }

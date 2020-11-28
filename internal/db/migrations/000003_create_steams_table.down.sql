@@ -1,1 +1,1 @@
-drop table if exists steams;
+drop table if exists steams cascade;

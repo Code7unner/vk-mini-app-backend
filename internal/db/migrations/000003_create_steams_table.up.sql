@@ -1,6 +1,6 @@
 create table if not exists steams
 (
-    id                         int not null primary key,
+    id                         bigint not null primary key,
     community_visibility_state int       not null,
     profile_state              int       not null,
     persona_name               varchar   not null,

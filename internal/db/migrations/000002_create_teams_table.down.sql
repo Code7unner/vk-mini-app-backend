@@ -1,1 +1,1 @@
-drop table if exists teams;
+drop table if exists teams cascade;
