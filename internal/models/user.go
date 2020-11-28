@@ -2,11 +2,12 @@ package models
 
 import (
 	"github.com/go-pg/pg/v10"
+	"github.com/google/uuid"
 )
 
 type UserImpl interface {
 	GetAll() ([]User, error)
-	SetTeamID(userID, teamID int) error
+	SetTeamID(userID int, teamID uuid.UUID) error
 	SetSteamID(userID, steamID int) error
 	Get(id int) (*User, bool)
 	Create(u *User) (*User, error)
@@ -15,19 +16,19 @@ type UserImpl interface {
 }
 
 type User struct {
-	tableName   struct{} `pg:"users,alias:c"` //nolint
-	ID          int      `json:"id"`
-	Name        string   `json:"name"`
-	Lastname    string   `json:"lastname"`
-	City        string   `json:"city"`
-	Country     string   `json:"country"`
-	Sex         int      `json:"sex"`
-	Timezone    int      `json:"timezone"`
-	PhotoSmall  string   `json:"photo_100"`
-	PhotoMedium string   `json:"photo_200"`
-	PhotoBig    string   `json:"photo_max_orig"`
-	TeamID      int      `json:"team_id"`
-	SteamID     int      `json:"steam_id"`
+	tableName   struct{}  `pg:"users,alias:c"` //nolint
+	ID          int       `json:"id"`
+	Name        string    `json:"name"`
+	Lastname    string    `json:"lastname"`
+	City        string    `json:"city"`
+	Country     string    `json:"country"`
+	Sex         int       `json:"sex"`
+	Timezone    int       `json:"timezone"`
+	PhotoSmall  string    `json:"photo_100"`
+	PhotoMedium string    `json:"photo_200"`
+	PhotoBig    string    `json:"photo_max_orig"`
+	TeamID      uuid.UUID `json:"team_id"`
+	SteamID     int       `json:"steam_id"`
 }
 
 type UserRepo struct {
@@ -47,7 +48,7 @@ func (r *UserRepo) GetAll() ([]User, error) {
 	return users, nil
 }
 
-func (r *UserRepo) SetTeamID(userID, teamID int) error {
+func (r *UserRepo) SetTeamID(userID int, teamID uuid.UUID) error {
 	user := &User{}
 	_, err := r.db.Model(user).
 		Set("team_id = ?", teamID).

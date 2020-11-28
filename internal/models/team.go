@@ -1,24 +1,27 @@
 package models
 
-import "github.com/go-pg/pg/v10"
+import (
+	"github.com/go-pg/pg/v10"
+	"github.com/google/uuid"
+)
 
 type TeamImpl interface {
 	GetAll() ([]Team, error)
 	SetMatchID(teamID, matchID int) error
-	Get(id int) (*Team, bool)
+	Get(id uuid.UUID) (*Team, bool)
 	Create(team *Team) (*Team, error)
 }
 
 type Team struct {
-	tableName   struct{} `pg:"teams,alias:c"` //nolint
-	ID          int      `json:"id"`
-	Title       string   `json:"title"`
-	Tag         string   `json:"tag"`
-	PhotoSmall  string   `json:"photo_100"`
-	PhotoMedium string   `json:"photo_200"`
-	PhotoBig    string   `json:"photo_max_orig"`
-	Rating      int      `json:"rating"`
-	MatchID     int      `json:"match_id"`
+	tableName   struct{}  `pg:"teams,alias:c"` //nolint
+	ID          uuid.UUID `json:"id"`
+	Title       string    `json:"title"`
+	Tag         string    `json:"tag"`
+	PhotoSmall  string    `json:"photo_100"`
+	PhotoMedium string    `json:"photo_200"`
+	PhotoBig    string    `json:"photo_max_orig"`
+	Rating      int       `json:"rating"`
+	MatchID     uuid.UUID `json:"match_id"`
 }
 
 type TeamRepo struct {
@@ -51,7 +54,7 @@ func (r *TeamRepo) SetMatchID(teamID, matchID int) error {
 	return nil
 }
 
-func (r *TeamRepo) Get(id int) (*Team, bool) {
+func (r *TeamRepo) Get(id uuid.UUID) (*Team, bool) {
 	team := &Team{}
 	err := r.db.Model(team).Where("id = ?", id).Select()
 	if err != nil {
