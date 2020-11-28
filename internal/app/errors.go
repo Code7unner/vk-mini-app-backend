@@ -11,3 +11,8 @@ var (
 	// ErrTeamNotFound team with given id not found.
 	ErrTeamNotFound = errors.New("team not found")
 )
+
+var (
+	// ErrSteamUserNotFound team with given id not found.
+	ErrSteamUserNotFound = errors.New("steam user not found")
+)

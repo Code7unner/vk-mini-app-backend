@@ -1,12 +1,16 @@
 package handlers
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/code7unner/vk-mini-app-backend/client"
 	"github.com/code7unner/vk-mini-app-backend/internal/app"
+	"github.com/code7unner/vk-mini-app-backend/internal/models"
 	"github.com/labstack/echo/v4"
 	"github.com/yohcop/openid-go"
 	"net/http"
+	"strconv"
+	"strings"
 )
 
 type SteamHandler struct {
@@ -38,9 +42,9 @@ func (h *SteamHandler) Login(c echo.Context) error {
 }
 
 func (h *SteamHandler) Callback(c echo.Context) error {
-	url := fmt.Sprintf("http://%s%s", h.host, c.Request().URL.String())
-	id, err := openid.Verify(
-		url,
+	uri := fmt.Sprintf("http://%s%s", h.host, c.Request().URL.String())
+	steamURL, err := openid.Verify(
+		uri,
 		openid.NewSimpleDiscoveryCache(),
 		openid.NewSimpleNonceStore(),
 	)
@@ -48,5 +52,56 @@ func (h *SteamHandler) Callback(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, errorResponse(err.Error()))
 	}
 
-	return c.JSON(http.StatusOK, id)
+	urlPaths := strings.Split(steamURL, "/")
+	id := urlPaths[len(urlPaths)-1]
+
+	url := fmt.Sprintf("http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=%s&steamids=%s", h.steamToken, id)
+	cl := h.httpClientPool.Get()
+	resp, err := cl.Get(url)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, errorResponse(err.Error()))
+	}
+	h.httpClientPool.Put(cl)
+	defer resp.Body.Close()
+
+	var steamData models.SteamData
+	if err := json.NewDecoder(resp.Body).Decode(&steamData); err != nil {
+		return c.JSON(http.StatusInternalServerError, errorResponse(err.Error()))
+	}
+
+	player := steamData.Response.Players[0]
+	playerID, _ := strconv.Atoi(player.SteamID)
+	steam := &models.Steam{
+		ID:                       playerID,
+		CommunityVisibilityState: player.CommunityVisibilityState,
+		ProfileState:             player.ProfileState,
+		PersonaName:              player.PersonaName,
+		CommentPermission:        player.CommentPermission,
+		ProfileURL:               player.ProfileURL,
+		Avatar:                   player.Avatar,
+		AvatarMedium:             player.AvatarMedium,
+		AvatarFull:               player.AvatarFull,
+		AvatarHash:               player.AvatarHash,
+		LastLogoff:               player.LastLogoff,
+		PersonaState:             player.PersonaState,
+		RealName:                 player.RealName,
+		PrimaryClanID:            player.PrimaryClanID,
+		TimeCreated:              player.TimeCreated,
+		PersonaStateFlags:        player.PersonaStateFlags,
+		LocCountryCode:           player.LocCountryCode,
+	}
+
+	s, err := h.app.GetSteamUser(playerID)
+	switch err {
+	case app.ErrSteamUserNotFound:
+		s, err = h.app.CreateSteamUser(steam)
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, errorResponse(err.Error()))
+		}
+		return c.JSON(http.StatusOK, s)
+	case nil:
+		return c.JSON(http.StatusOK, s)
+	default:
+		return c.JSON(http.StatusInternalServerError, errorResponse("unexpected error"))
+	}
 }

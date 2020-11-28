@@ -12,6 +12,10 @@ type Application interface {
 	// Teams
 	GetTeam(id int) (*models.Team, error)
 	CreateTeam(team *models.Team) (*models.Team, error)
+	
+	// Steams
+	GetSteamUser(id int) (*models.Steam, error)
+	CreateSteamUser(steam *models.Steam) (*models.Steam, error)
 }
 
 type App struct {
@@ -62,4 +66,22 @@ func (a App) CreateTeam(team *models.Team) (*models.Team, error) {
 	}
 
 	return t, nil
+}
+
+func (a App) GetSteamUser(id int) (*models.Steam, error) {
+	steam, ok := a.steamModel.Get(id)
+	if !ok {
+		return nil, ErrSteamUserNotFound
+	}
+
+	return steam, nil
+}
+
+func (a App) CreateSteamUser(steam *models.Steam) (*models.Steam, error) {
+	s, err := a.steamModel.Create(steam)
+	if err != nil {
+		return nil, err
+	}
+
+	return s, nil
 }
