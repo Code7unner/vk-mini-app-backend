@@ -1,1 +1,1 @@
-web: bin/vk-mini-app
+web: bin/vk-mini-app-backend
