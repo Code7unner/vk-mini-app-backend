@@ -5,6 +5,7 @@ import (
 )
 
 type UserImpl interface {
+	GetAll() ([]User, error)
 	SetTeamID(userID, teamID int) error
 	SetSteamID(userID, steamID int) error
 	Get(id int) (*User, bool)
@@ -35,6 +36,15 @@ type UserRepo struct {
 
 func NewUserModel(db *pg.DB) *UserRepo {
 	return &UserRepo{db}
+}
+
+func (r *UserRepo) GetAll() ([]User, error) {
+	var users []User
+	if err := r.db.Model(&users).Select(); err != nil {
+		return users, err
+	}
+
+	return users, nil
 }
 
 func (r *UserRepo) SetTeamID(userID, teamID int) error {

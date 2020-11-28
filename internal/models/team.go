@@ -3,6 +3,7 @@ package models
 import "github.com/go-pg/pg/v10"
 
 type TeamImpl interface {
+	GetAll() ([]Team, error)
 	SetMatchID(teamID, matchID int) error
 	Get(id int) (*Team, bool)
 	Create(team *Team) (*Team, error)
@@ -26,6 +27,15 @@ type TeamRepo struct {
 
 func NewTeamModel(db *pg.DB) *TeamRepo {
 	return &TeamRepo{db}
+}
+
+func (r *TeamRepo) GetAll() ([]Team, error) {
+	teams := []Team{}
+	if err := r.db.Model(&teams).Select(); err != nil {
+		return teams, err
+	}
+
+	return teams, nil
 }
 
 func (r *TeamRepo) SetMatchID(teamID, matchID int) error {

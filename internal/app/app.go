@@ -8,10 +8,12 @@ type Application interface {
 	// Users
 	GetUser(id int) (*models.User, error)
 	CreateUser(user *models.User) (*models.User, error)
+	GetAllUsers() ([]models.User, error)
 
 	// Teams
 	GetTeam(id int) (*models.Team, error)
 	CreateTeam(team *models.Team, userID int) (*models.Team, error)
+	GetAllTeams() ([]models.Team, error)
 
 	// Steams
 	GetSteamUser(id int) (*models.Steam, error)
@@ -38,6 +40,11 @@ func New(user models.UserImpl, team models.TeamImpl, steam models.SteamImpl, mat
 	}
 }
 
+
+func (a App) GetAllUsers() ([]models.User, error) {
+	return a.userModel.GetAll()
+}
+
 func (a App) GetUser(id int) (*models.User, error) {
 	user, ok := a.userModel.Get(id)
 	if !ok {
@@ -54,6 +61,10 @@ func (a App) CreateUser(user *models.User) (*models.User, error) {
 	}
 
 	return u, nil
+}
+
+func (a App) GetAllTeams() ([]models.Team, error) {
+	return a.teamModel.GetAll()
 }
 
 func (a App) GetTeam(id int) (*models.Team, error) {

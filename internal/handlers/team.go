@@ -70,3 +70,14 @@ func (h *TeamHandler) GetTeam(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, t)
 }
+
+func (h *TeamHandler) GetAllTeams(c echo.Context) error {
+	teams, err := h.app.GetAllTeams()
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, errorResponse(err.Error()))
+	}
+
+	return c.JSON(http.StatusOK, teams)
+}
+
+

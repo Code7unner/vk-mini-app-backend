@@ -45,7 +45,7 @@ func (h *UserHandler) RegisterUser(c echo.Context) error {
 	}
 }
 
-func (h *UserHandler) Login(c echo.Context) error {
+func (h *UserHandler) GetUser(c echo.Context) error {
 	cookie, err := c.Cookie("user_id")
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, errorResponse(err.Error()))
@@ -60,4 +60,13 @@ func (h *UserHandler) Login(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, u)
+}
+
+func (h *UserHandler) GetAllUsers(c echo.Context) error {
+	users, err := h.app.GetAllUsers()
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, errorResponse(err.Error()))
+	}
+
+	return c.JSON(http.StatusOK, users)
 }

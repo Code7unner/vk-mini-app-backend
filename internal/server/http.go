@@ -23,12 +23,14 @@ func New(a app.Application, cfg *config.Config) *echo.Echo {
 
 	userHandler := handlers.NewUserHandler(a, authorize)
 	u := e.Group("/user")
+	u.GET("/", userHandler.GetUser)
+	u.GET("/all", userHandler.GetAllUsers)
 	u.POST("/register", userHandler.RegisterUser)
-	u.GET("/login", userHandler.Login)
 
 	teamHandler := handlers.NewTeamHandler(a, authorize)
 	t := e.Group("/team")
 	t.GET("/", teamHandler.GetTeam)
+	t.GET("/all", teamHandler.GetAllTeams)
 	t.POST("/create", teamHandler.CreateTeam)
 
 	steamHandler := handlers.NewSteamHandler(a, url, cfg.SteamToken)
