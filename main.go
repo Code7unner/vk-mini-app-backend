@@ -42,8 +42,9 @@ func main() {
 	uModel := models.NewUserModel(d)
 	tModel := models.NewTeamModel(d)
 
+	url := fmt.Sprintf("%s:%s", cfg.ServerHost, cfg.ServerPort)
 	// Starting server
-	srv := server.New(app.New(uModel, tModel))
+	srv := server.New(app.New(uModel, tModel), url)
 	go func() {
 		if err := srv.Start(fmt.Sprintf(":%s", cfg.ServerPort)); err != nil {
 			srv.Logger.Info("shutting down the server")

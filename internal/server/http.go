@@ -7,7 +7,7 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 )
 
-func New(a app.Application) *echo.Echo {
+func New(a app.Application, h string) *echo.Echo {
 	e := echo.New()
 
 	e.Use(middleware.Logger())
@@ -23,6 +23,11 @@ func New(a app.Application) *echo.Echo {
 	t := e.Group("/team")
 	t.GET("/:id", teamHandler.GetTeam)
 	t.POST("/create", teamHandler.CreateTeam)
+
+	steamHandler := handlers.NewSteamHandler(a, h)
+	s := e.Group("/steam")
+	s.GET("/login", steamHandler.Login)
+	s.GET("/callback", steamHandler.Callback)
 
 	return e
 }
