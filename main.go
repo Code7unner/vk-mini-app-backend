@@ -44,9 +44,10 @@ func main() {
 	uModel := models.NewUserModel(d)
 	tModel := models.NewTeamModel(d)
 	sModel := models.NewSteamModel(d)
+	mModel := models.NewMatchModel(d)
 
 	// Starting server
-	srv := server.New(app.New(uModel, tModel, sModel), url, cfg.SteamToken)
+	srv := server.New(app.New(uModel, tModel, sModel, mModel), url, cfg.SteamToken)
 	go func() {
 		if err := srv.Start(fmt.Sprintf(":%s", cfg.ServerPort)); err != nil {
 			srv.Logger.Info("shutting down the server")

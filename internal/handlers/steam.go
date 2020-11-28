@@ -11,6 +11,7 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+	"time"
 )
 
 type SteamHandler struct {
@@ -37,6 +38,15 @@ func (h *SteamHandler) Login(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, errorResponse(err.Error()))
 	}
+
+	userID := c.Param("user_id")
+
+	cookie := &http.Cookie{
+		Name:    "user_id",
+		Value:   userID,
+		Expires: <-time.After(time.Hour * 48),
+	}
+	c.SetCookie(cookie)
 
 	return c.Redirect(http.StatusSeeOther, url)
 }
@@ -91,10 +101,16 @@ func (h *SteamHandler) Callback(c echo.Context) error {
 		LocCountryCode:           player.LocCountryCode,
 	}
 
+	cookie, err := c.Cookie("user_id")
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, errorResponse(err.Error()))
+	}
+	userID, _ := strconv.Atoi(cookie.Value)
+
 	s, err := h.app.GetSteamUser(playerID)
 	switch err {
 	case app.ErrSteamUserNotFound:
-		s, err = h.app.CreateSteamUser(steam)
+		s, err = h.app.CreateSteamUser(steam, userID)
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, errorResponse(err.Error()))
 		}
@@ -107,7 +123,12 @@ func (h *SteamHandler) Callback(c echo.Context) error {
 }
 
 func (h *SteamHandler) GetSteamUser(c echo.Context) error {
-	id, err := strconv.Atoi(c.Param("id"))
+	cookie, err := c.Cookie("steam_id")
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, errorResponse(err.Error()))
+	}
+
+	id, err := strconv.Atoi(cookie.Value)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, errorResponse(err.Error()))
 	}

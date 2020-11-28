@@ -17,6 +17,12 @@ func NewTeamHandler(a app.Application) *TeamHandler {
 }
 
 func (h *TeamHandler) CreateTeam(c echo.Context) error {
+	cookie, err := c.Cookie("user_id")
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, errorResponse(err.Error()))
+	}
+	userID, _ := strconv.Atoi(cookie.Value)
+
 	team := new(models.Team)
 	if err := c.Bind(team); err != nil {
 		return c.JSON(http.StatusBadRequest, errorResponse(err.Error()))
@@ -25,7 +31,7 @@ func (h *TeamHandler) CreateTeam(c echo.Context) error {
 	t, err := h.app.GetTeam(team.ID)
 	switch err {
 	case app.ErrTeamNotFound:
-		t, err = h.app.CreateTeam(team)
+		t, err = h.app.CreateTeam(team, userID)
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, errorResponse(err.Error()))
 		}
@@ -38,7 +44,11 @@ func (h *TeamHandler) CreateTeam(c echo.Context) error {
 }
 
 func (h *TeamHandler) GetTeam(c echo.Context) error {
-	id, err := strconv.Atoi(c.Param("id"))
+	cookie, err := c.Cookie("team_id")
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, errorResponse(err.Error()))
+	}
+	id, err := strconv.Atoi(cookie.Value)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, errorResponse(err.Error()))
 	}

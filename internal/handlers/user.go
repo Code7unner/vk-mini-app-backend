@@ -38,7 +38,11 @@ func (h *UserHandler) RegisterUser(c echo.Context) error {
 }
 
 func (h *UserHandler) Login(c echo.Context) error {
-	id, err := strconv.Atoi(c.Param("id"))
+	cookie, err := c.Cookie("user_id")
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, errorResponse(err.Error()))
+	}
+	id, err := strconv.Atoi(cookie.Value)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, errorResponse(err.Error()))
 	}

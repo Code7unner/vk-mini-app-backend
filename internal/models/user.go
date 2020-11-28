@@ -5,6 +5,8 @@ import (
 )
 
 type UserImpl interface {
+	SetTeamID(userID, teamID int) error
+	SetSteamID(userID, steamID int) error
 	Get(id int) (*User, bool)
 	Create(u *User) (*User, error)
 	Update(u *User) (*User, error)
@@ -24,6 +26,7 @@ type User struct {
 	PhotoMedium string   `json:"photo_200"`
 	PhotoBig    string   `json:"photo_max_orig"`
 	TeamID      int      `json:"team_id"`
+	SteamID     int      `json:"steam_id"`
 }
 
 type UserRepo struct {
@@ -32,6 +35,32 @@ type UserRepo struct {
 
 func NewUserModel(db *pg.DB) *UserRepo {
 	return &UserRepo{db}
+}
+
+func (r *UserRepo) SetTeamID(userID, teamID int) error {
+	user := &User{}
+	_, err := r.db.Model(user).
+		Set("team_id = ?", teamID).
+		Where("id = ?", userID).
+		UpdateNotZero()
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (r *UserRepo) SetSteamID(userID, steamID int) error {
+	user := &User{}
+	_, err := r.db.Model(user).
+		Set("steam_id = ?", steamID).
+		Where("id = ?", userID).
+		UpdateNotZero()
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (r *UserRepo) Get(id int) (*User, bool) {

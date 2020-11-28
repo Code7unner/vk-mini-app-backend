@@ -70,7 +70,7 @@ func (r *SteamRepo) Get(id int) (*Steam, bool) {
 	return steam, true
 }
 
-func (r *SteamRepo) Create(s *Steam) (*Steam, error) {
+func (r *SteamRepo) Create(s *Steam, userID int) (*Steam, error) {
 	_, err := r.db.Model(s).Insert()
 	if err != nil {
 		return nil, err

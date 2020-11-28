@@ -11,24 +11,26 @@ type Application interface {
 
 	// Teams
 	GetTeam(id int) (*models.Team, error)
-	CreateTeam(team *models.Team) (*models.Team, error)
-	
+	CreateTeam(team *models.Team, userID int) (*models.Team, error)
+
 	// Steams
 	GetSteamUser(id int) (*models.Steam, error)
-	CreateSteamUser(steam *models.Steam) (*models.Steam, error)
+	CreateSteamUser(steam *models.Steam, userID int) (*models.Steam, error)
 }
 
 type App struct {
 	userModel  models.UserImpl
 	teamModel  models.TeamImpl
 	steamModel models.SteamImpl
+	matchModel models.MatchImpl
 }
 
-func New(user models.UserImpl, team models.TeamImpl, steam models.SteamImpl) Application {
+func New(user models.UserImpl, team models.TeamImpl, steam models.SteamImpl, match models.MatchImpl) Application {
 	return &App{
 		userModel:  user,
 		teamModel:  team,
 		steamModel: steam,
+		matchModel: match,
 	}
 }
 
@@ -59,9 +61,13 @@ func (a App) GetTeam(id int) (*models.Team, error) {
 	return team, nil
 }
 
-func (a App) CreateTeam(team *models.Team) (*models.Team, error) {
+func (a App) CreateTeam(team *models.Team, userID int) (*models.Team, error) {
 	t, err := a.teamModel.Create(team)
 	if err != nil {
+		return nil, err
+	}
+
+	if err := a.userModel.SetTeamID(userID, team.ID); err != nil {
 		return nil, err
 	}
 
@@ -77,9 +83,13 @@ func (a App) GetSteamUser(id int) (*models.Steam, error) {
 	return steam, nil
 }
 
-func (a App) CreateSteamUser(steam *models.Steam) (*models.Steam, error) {
+func (a App) CreateSteamUser(steam *models.Steam, userID int) (*models.Steam, error) {
 	s, err := a.steamModel.Create(steam)
 	if err != nil {
+		return nil, err
+	}
+
+	if err := a.userModel.SetSteamID(userID, steam.ID); err != nil {
 		return nil, err
 	}
 
