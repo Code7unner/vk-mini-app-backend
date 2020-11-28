@@ -28,6 +28,7 @@ func New(a app.Application, host string, token string) *echo.Echo {
 	s := e.Group("/steam")
 	s.GET("/login", steamHandler.Login)
 	s.GET("/callback", steamHandler.Callback)
+	s.GET("/user/:id", steamHandler.GetSteamUser)
 
 	return e
 }

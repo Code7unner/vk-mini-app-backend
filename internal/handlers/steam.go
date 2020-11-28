@@ -105,3 +105,20 @@ func (h *SteamHandler) Callback(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, errorResponse("unexpected error"))
 	}
 }
+
+func (h *SteamHandler) GetSteamUser(c echo.Context) error {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, errorResponse(err.Error()))
+	}
+
+	u, err := h.app.GetSteamUser(id)
+	switch err {
+	case app.ErrSteamUserNotFound:
+		return c.JSON(http.StatusInternalServerError, errorResponse("could not find user"))
+	case nil:
+		return c.JSON(http.StatusOK, u)
+	default:
+		return c.JSON(http.StatusInternalServerError, errorResponse("unexpected error"))
+	}
+}
