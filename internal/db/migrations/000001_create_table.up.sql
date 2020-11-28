@@ -10,31 +10,31 @@ create table if not exists public.users
     photo_small  varchar not null,
     photo_medium varchar not null,
     photo_big    varchar not null,
-    team_id      bigint,
-    steam_id     bigint
+    team_id      bigserial,
+    steam_id     bigserial
 );
 
 create table if not exists public.teams
 (
-    id           bigint  not null primary key,
-    title        varchar not null,
-    tag          varchar not null,
-    photo_small  varchar not null,
-    photo_medium varchar not null,
-    photo_big    varchar not null,
-    rating       int     not null,
-    match_id     bigint
+    id           bigserial not null primary key,
+    title        varchar   not null,
+    tag          varchar   not null,
+    photo_small  varchar   not null,
+    photo_medium varchar   not null,
+    photo_big    varchar   not null,
+    rating       int       not null,
+    match_id     bigserial
 );
 
 create table if not exists public.matches
 (
-    id               bigint  not null primary key,
-    team_left_id     bigint,
-    team_right_id    bigint,
-    time_created     int     not null,
-    time_started     int     not null,
-    team_left_ready  boolean not null,
-    team_right_ready boolean not null
+    id               bigserial not null primary key,
+    team_left_id     bigserial,
+    team_right_id    bigserial,
+    time_created     int       not null,
+    time_started     int       not null,
+    team_left_ready  boolean   not null,
+    team_right_ready boolean   not null
 );
 
 create table if not exists public.steams
