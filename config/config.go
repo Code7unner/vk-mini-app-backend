@@ -18,6 +18,9 @@ type Config struct {
 	LogLevel   string `env:"LOG_LEVEL" envDefault:"debug"`
 	ServerPort string `env:"SERVER_PORT" envDefault:"8081"`
 	ServerHost string `env:"SERVER_HOST" envDefault:"127.0.0.1"`
+
+	// Steam config
+	SteamToken string `env:"STEAM_TOKEN,required"`
 }
 
 // New returns a new Config struct

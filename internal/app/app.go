@@ -5,22 +5,26 @@ import (
 )
 
 type Application interface {
+	// Users
 	GetUser(id int) (*models.User, error)
 	CreateUser(user *models.User) (*models.User, error)
 
+	// Teams
 	GetTeam(id int) (*models.Team, error)
 	CreateTeam(team *models.Team) (*models.Team, error)
 }
 
 type App struct {
-	userModel models.UserImpl
-	teamModel models.TeamImpl
+	userModel  models.UserImpl
+	teamModel  models.TeamImpl
+	steamModel models.SteamImpl
 }
 
-func New(user models.UserImpl, team models.TeamImpl) Application {
+func New(user models.UserImpl, team models.TeamImpl, steam models.SteamImpl) Application {
 	return &App{
-		userModel: user,
-		teamModel: team,
+		userModel:  user,
+		teamModel:  team,
+		steamModel: steam,
 	}
 }
 

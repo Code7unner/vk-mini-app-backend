@@ -39,12 +39,14 @@ func main() {
 	}
 	defer d.Close()
 
+	url := fmt.Sprintf("%s:%s", cfg.ServerHost, cfg.ServerPort)
+
 	uModel := models.NewUserModel(d)
 	tModel := models.NewTeamModel(d)
+	sModel := models.NewSteamModel(d)
 
-	url := fmt.Sprintf("%s:%s", cfg.ServerHost, cfg.ServerPort)
 	// Starting server
-	srv := server.New(app.New(uModel, tModel), url)
+	srv := server.New(app.New(uModel, tModel, sModel), url, cfg.SteamToken)
 	go func() {
 		if err := srv.Start(fmt.Sprintf(":%s", cfg.ServerPort)); err != nil {
 			srv.Logger.Info("shutting down the server")
