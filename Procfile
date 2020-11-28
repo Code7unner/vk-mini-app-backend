@@ -1,1 +1,1 @@
-web: bin/vk-mini-app-backend
+web: go run .
