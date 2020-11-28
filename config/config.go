@@ -13,7 +13,6 @@ type Config struct {
 	Port      int    `env:"DB_PORT" envDefault:"5432"`
 	DbName    string `env:"DB_NAME,required"`
 	SslEnable bool   `env:"DB_SSL_ENABLE" envDefault:"false"`
-	DbString  string `env:"DATABASE_URL,required"`
 
 	// App config
 	LogLevel   string `env:"LOG_LEVEL" envDefault:"debug"`
