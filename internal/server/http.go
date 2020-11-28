@@ -29,7 +29,7 @@ func New(a app.Application, cfg *config.Config) *echo.Echo {
 
 	teamHandler := handlers.NewTeamHandler(a, authorize)
 	t := e.Group("/team")
-	t.GET("/", teamHandler.GetTeam)
+	t.GET("/:id", teamHandler.GetTeam)
 	t.GET("/all", teamHandler.GetAllTeams)
 	t.POST("/create", teamHandler.CreateTeam)
 
@@ -41,7 +41,7 @@ func New(a app.Application, cfg *config.Config) *echo.Echo {
 
 	matchHandler := handlers.NewMatchHandler(a)
 	m := e.Group("/match")
-	m.GET("/", matchHandler.GetMatch)
+	m.GET("/:id", matchHandler.GetMatch)
 	m.POST("/create", matchHandler.CreateMatch)
 
 	return e

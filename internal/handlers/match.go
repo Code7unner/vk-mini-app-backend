@@ -40,14 +40,11 @@ func (h *MatchHandler) CreateMatch(c echo.Context) error {
 }
 
 func (h *MatchHandler) GetMatch(c echo.Context) error {
-	cookie, err := c.Cookie("match_id")
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, errorResponse(err.Error()))
 	}
-	id, err := strconv.Atoi(cookie.Value)
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, errorResponse(err.Error()))
-	}
+
 	m, err := h.app.GetMatch(id)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, errorResponse(err.Error()))

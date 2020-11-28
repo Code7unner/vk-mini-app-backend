@@ -11,9 +11,6 @@ type Auth interface {
 	SetUserToken(id int) (string, error)
 	GetUserID(cookie *http.Cookie) (int, error)
 
-	SetTeamToken(id int) (string, error)
-	GetTeamID(cookie *http.Cookie) (int, error)
-
 	NewCookie(name, value string) *http.Cookie
 }
 
@@ -24,37 +21,6 @@ type auth struct {
 
 func New(secret string) Auth {
 	return &auth{SecretKey: secret, expTime: time.Now().Add(200 * time.Hour)}
-}
-
-func (a auth) GetTeamID(c *http.Cookie) (int, error) {
-	teamClaims := new(TeamClaims)
-	_, err := jwt.ParseWithClaims(c.Value, teamClaims, func(token *jwt.Token) (interface{}, error) {
-		return a.SecretKey, nil
-	})
-	if err != nil {
-		return 0, err
-	}
-
-	id, _ := strconv.Atoi(teamClaims.TeamID)
-
-	return id, nil
-}
-
-func (a auth) SetTeamToken(id int) (string, error) {
-	claims := &TeamClaims{
-		TeamID: strconv.Itoa(id),
-		StandardClaims: jwt.StandardClaims{
-			ExpiresAt: a.expTime.Unix(),
-		},
-	}
-
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	tokenString, err := token.SignedString([]byte(a.SecretKey))
-	if err != nil {
-		return "", err
-	}
-
-	return tokenString, nil
 }
 
 func (a auth) GetUserID(c *http.Cookie) (int, error) {
