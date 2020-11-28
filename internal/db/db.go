@@ -14,6 +14,7 @@ func Connect(cfg *config.Config) (*pg.DB, error) {
 		Password: cfg.Password,
 		Database: cfg.DbName,
 	})
+
 	if err := db.Ping(db.Context()); err != nil {
 		return nil, err
 	}
