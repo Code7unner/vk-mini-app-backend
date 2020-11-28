@@ -28,7 +28,7 @@ create table if not exists public.teams
 
 create table if not exists public.matches
 (
-    id               uuid not null primary key,
+    id               uuid      not null primary key,
     team_left_id     uuid,
     team_right_id    uuid,
     time_created     timestamp not null,
