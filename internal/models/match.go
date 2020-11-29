@@ -2,7 +2,6 @@ package models
 
 import (
 	"github.com/go-pg/pg/v10"
-	"time"
 )
 
 type MatchImpl interface {
@@ -16,8 +15,8 @@ type Match struct {
 	ID             int       `json:"id"`
 	TeamLeftID     int       `json:"team_left_id"`
 	TeamRightID    int       `json:"team_right_id"`
-	TimeCreated    time.Time `json:"time_created"`
-	TimeStarted    time.Time `json:"time_started"`
+	TimeCreated    string `json:"time_created"`
+	TimeStarted    string `json:"time_started"`
 	TeamLeftReady  bool      `json:"team_left_ready"`
 	TeamRightReady bool      `json:"team_right_ready"`
 }

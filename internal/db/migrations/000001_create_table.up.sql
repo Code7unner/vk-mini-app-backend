@@ -31,8 +31,8 @@ create table if not exists public.matches
     id               bigint primary key,
     team_left_id     bigint,
     team_right_id    bigint,
-    time_created     timestamp not null,
-    time_started     timestamp not null,
+    time_created     varchar not null,
+    time_started     varchar not null,
     team_left_ready  boolean default false,
     team_right_ready boolean default false
 );
