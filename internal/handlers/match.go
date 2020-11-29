@@ -7,6 +7,7 @@ import (
 	"math/rand"
 	"net/http"
 	"strconv"
+	"time"
 )
 
 type MatchHandler struct {
@@ -25,7 +26,7 @@ func (h *MatchHandler) CreateMatch(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, errorResponse(err.Error()))
 	}
 
-
+	match.TimeCreated = time.Now()
 	match.ID = rand.Int()
 	m, err := h.app.GetMatch(match.ID)
 	switch err {
