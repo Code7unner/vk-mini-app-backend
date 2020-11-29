@@ -2,7 +2,6 @@ package app
 
 import (
 	"github.com/code7unner/vk-mini-app-backend/internal/models"
-	"github.com/google/uuid"
 )
 
 type Application interface {
@@ -12,7 +11,7 @@ type Application interface {
 	GetAllUsers() ([]models.User, error)
 
 	// Teams
-	GetTeam(id uuid.UUID) (*models.Team, error)
+	GetTeam(id int) (*models.Team, error)
 	CreateTeam(team *models.Team, userID int) (*models.Team, error)
 	GetAllTeams() ([]models.Team, error)
 
@@ -21,7 +20,7 @@ type Application interface {
 	CreateSteamUser(steam *models.Steam, userID int) (*models.Steam, error)
 	
 	// Matches
-	GetMatch(id uuid.UUID) (*models.Match, error)
+	GetMatch(id int) (*models.Match, error)
 	CreateMatch(match *models.Match) (*models.Match, error)
 }
 
@@ -68,7 +67,7 @@ func (a App) GetAllTeams() ([]models.Team, error) {
 	return a.teamModel.GetAll()
 }
 
-func (a App) GetTeam(id uuid.UUID) (*models.Team, error) {
+func (a App) GetTeam(id int) (*models.Team, error) {
 	team, ok := a.teamModel.Get(id)
 	if !ok {
 		return nil, ErrTeamNotFound
@@ -112,7 +111,7 @@ func (a App) CreateSteamUser(steam *models.Steam, userID int) (*models.Steam, er
 	return s, nil
 }
 
-func (a App) GetMatch(id uuid.UUID) (*models.Match, error) {
+func (a App) GetMatch(id int) (*models.Match, error) {
 	m, ok := a.matchModel.Get(id)
 	if !ok {
 		return nil, ErrMatchNotFound

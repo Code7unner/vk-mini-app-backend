@@ -4,9 +4,10 @@ import (
 	"github.com/code7unner/vk-mini-app-backend/internal/app"
 	"github.com/code7unner/vk-mini-app-backend/internal/auth"
 	"github.com/code7unner/vk-mini-app-backend/internal/models"
-	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
+	"math/rand"
 	"net/http"
+	"strconv"
 )
 
 type TeamHandler struct {
@@ -28,13 +29,12 @@ func (h *TeamHandler) CreateTeam(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, errorResponse(err.Error()))
 	}
-
 	userID, err := h.authorize.GetUserID(cookie)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, errorResponse(err.Error()))
 	}
 
-	team.ID = uuid.New()
+	team.ID = rand.Int()
 	t, err := h.app.GetTeam(team.ID)
 	switch err {
 	case app.ErrTeamNotFound:
@@ -51,7 +51,7 @@ func (h *TeamHandler) CreateTeam(c echo.Context) error {
 }
 
 func (h *TeamHandler) GetTeam(c echo.Context) error {
-	id, err := uuid.Parse(c.Param("id"))
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, errorResponse(err.Error()))
 	}

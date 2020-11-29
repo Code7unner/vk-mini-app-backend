@@ -3,9 +3,10 @@ package handlers
 import (
 	"github.com/code7unner/vk-mini-app-backend/internal/app"
 	"github.com/code7unner/vk-mini-app-backend/internal/models"
-	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
+	"math/rand"
 	"net/http"
+	"strconv"
 )
 
 type MatchHandler struct {
@@ -25,7 +26,7 @@ func (h *MatchHandler) CreateMatch(c echo.Context) error {
 	}
 
 
-	match.ID = uuid.New()
+	match.ID = rand.Int()
 	m, err := h.app.GetMatch(match.ID)
 	switch err {
 	case app.ErrMatchNotFound:
@@ -42,7 +43,7 @@ func (h *MatchHandler) CreateMatch(c echo.Context) error {
 }
 
 func (h *MatchHandler) GetMatch(c echo.Context) error {
-	id, err := uuid.Parse(c.Param("id"))
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, errorResponse(err.Error()))
 	}
