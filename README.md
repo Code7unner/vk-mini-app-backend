@@ -1,6 +1,15 @@
 #vk-mini-app-backend
 
+[![Docs Status](https://img.shields.io/badge/Docs-Status-brightgreen.svg?style=flat)](https://github.com/Code7unner/vk-mini-app-backend/blob/main/README.md)
+
 ###API
+
+<!-- TOC depthFrom:1 depthTo:2 withLinks:1 updateOnSave:1 orderedList:0 -->
+- [User](#user-routes)
+- [Team](#team-routes)
+- [Steam](#steam-routes)
+- [Match](#match-routes)
+<!-- /TOC -->
 
 ### User routes:
 **`POST`**
@@ -43,7 +52,30 @@
 ```
 
 **`GET`** 
-- */team* (with cookie `team_id`)
+- */team/:id* (with cookie `user_id`)
 
 **`GET`** 
 - /team/all
+
+### Steam routes
+**`GET`**
++ */steam/login*
+
+**`GET`**
++ */steam/user*
+
+### Match routes
+**`POST`**
++ */match/create*
+```json5
+{
+    "team_left_id": 123123,
+	"team_right_id": 322322,
+	"time_created": "22-04-2020",
+	"time_started": "22-04-2020",
+	"team_left_ready": true,
+	"team_right_ready": false
+}
+```
+**`GET`**
++ */match/:id*
