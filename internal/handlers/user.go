@@ -35,10 +35,10 @@ func (h *UserHandler) RegisterUser(c echo.Context) error {
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, errorResponse(err.Error()))
 		}
-		c.SetCookie(h.authorize.NewCookie("user_id", token))
+		c.Request().Header.Add("Authorization", h.authorize.GetUserIDFromHeader(token))
 		return c.JSON(http.StatusOK, u)
 	case nil:
-		c.SetCookie(h.authorize.NewCookie("user_id", token))
+		c.Response().Header().Add("Authorization", h.authorize.GetUserIDFromHeader(token))
 		return c.JSON(http.StatusOK, u)
 	default:
 		return c.JSON(http.StatusInternalServerError, errorResponse("unexpected error"))

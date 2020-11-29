@@ -10,6 +10,7 @@ import (
 type Auth interface {
 	SetUserToken(id int) (string, error)
 	GetUserID(cookie *http.Cookie) (int, error)
+	GetUserIDFromHeader(token string) string
 
 	NewCookie(name, value string) *http.Cookie
 }
@@ -21,6 +22,18 @@ type auth struct {
 
 func New(secret string) Auth {
 	return &auth{SecretKey: secret, expTime: time.Now().Add(200 * time.Hour)}
+}
+
+func (a auth) GetUserIDFromHeader(token string) string {
+	userClaims := new(UserClaims)
+	_, err := jwt.ParseWithClaims(token, userClaims, func(token *jwt.Token) (interface{}, error) {
+		return a.SecretKey, nil
+	})
+	if err != nil {
+		return ""
+	}
+
+	return userClaims.UserID
 }
 
 func (a auth) GetUserID(c *http.Cookie) (int, error) {
