@@ -31,7 +31,7 @@ func New(a app.Application, cfg *config.Config) *echo.Echo {
 	t := e.Group("/team")
 	t.GET("/:id", teamHandler.GetTeam)
 	t.GET("/all", teamHandler.GetAllTeams)
-	t.POST("/create", teamHandler.CreateTeam)
+	t.POST("/create/:id", teamHandler.CreateTeam)
 
 	steamHandler := handlers.NewSteamHandler(a, url, cfg.SteamToken)
 	s := e.Group("/steam")

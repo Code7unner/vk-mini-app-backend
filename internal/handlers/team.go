@@ -25,11 +25,7 @@ func (h *TeamHandler) CreateTeam(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, errorResponse(err.Error()))
 	}
 
-	cookie, err := c.Cookie("user_id")
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, errorResponse(err.Error()))
-	}
-	userID, err := h.authorize.GetUserID(cookie)
+	userID, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, errorResponse(err.Error()))
 	}
