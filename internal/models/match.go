@@ -8,6 +8,7 @@ import (
 type MatchImpl interface {
 	Get(id int) (*Match, bool)
 	Create(s *Match) (*Match, error)
+	GetALl() ([]Match, error)
 }
 
 type Match struct {
@@ -46,4 +47,13 @@ func (r *MatchRepo) Create(m *Match) (*Match, error) {
 	}
 
 	return m, nil
+}
+
+func (r *MatchRepo) GetALl() ([]Match, error) {
+	matches := []Match{}
+	if err := r.db.Model(&matches).Select(); err != nil {
+		return matches, err
+	}
+
+	return matches, nil
 }

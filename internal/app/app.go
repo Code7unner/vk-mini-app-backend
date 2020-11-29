@@ -22,6 +22,7 @@ type Application interface {
 	// Matches
 	GetMatch(id int) (*models.Match, error)
 	CreateMatch(match *models.Match) (*models.Match, error)
+	GetAllMatches() ([]models.Match, error)
 }
 
 type App struct {
@@ -127,4 +128,8 @@ func (a App) CreateMatch(match *models.Match) (*models.Match, error) {
 	}
 
 	return m, nil
+}
+
+func (a App) GetAllMatches() ([]models.Match, error) {
+	return a.matchModel.GetALl()
 }

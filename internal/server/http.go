@@ -43,6 +43,7 @@ func New(a app.Application, cfg *config.Config) *echo.Echo {
 	m := e.Group("/match")
 	m.GET("/:id", matchHandler.GetMatch)
 	m.POST("/create", matchHandler.CreateMatch)
+	m.POST("/all", matchHandler.GetAllMatches)
 
 	return e
 }

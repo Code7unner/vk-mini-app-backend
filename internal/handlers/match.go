@@ -54,3 +54,12 @@ func (h *MatchHandler) GetMatch(c echo.Context) error {
 	}
 	return c.JSON(http.StatusOK, m)
 }
+
+func (h *MatchHandler) GetAllMatches(c echo.Context) error {
+	matches, err := h.app.GetAllMatches()
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, errorResponse(err.Error()))
+	}
+
+	return c.JSON(http.StatusOK, matches)
+}
